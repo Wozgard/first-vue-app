@@ -1,0 +1,13 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    background-color: #fefefe;
+}
+body{
+    background-color: #fefefe;
+}
+a{
+    cursor: pointer;
+}
