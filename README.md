@@ -1,4 +1,4 @@
-# try-to-sergey
+# first-vue-app
 
 ## Project setup
 ```
