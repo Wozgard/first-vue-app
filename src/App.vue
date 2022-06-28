@@ -1,6 +1,6 @@
 <template>
     <headerApp />
-    <mainApp v-bind:orders="orders" />
+    <mainApp v-bind:orders="orders" @order-select="checkingRadio" />
     <footerApp />
 </template>
 
@@ -14,10 +14,22 @@ export default {
     data() {
         return {
             orders: [
-                { id: "photo", serviceName: "Обработка фото" },
-                { id: "video", serviceName: "Монтаж короткого ролика (до 5 минут)" },
-                { id: "photoSet", serviceName: "Фотосессия" }
+                { id: "photo", serviceName: "Обработка фото", select: true },
+                { id: "video", serviceName: "Монтаж короткого ролика (до 5 минут)", select: false },
+                { id: "photoSet", serviceName: "Фотосессия", select: false }
             ]
+        }
+    },
+    methods: {
+        checkingRadio(id) {
+            this.orders.forEach(el => {
+                if (el.id == id && !el.select) {
+                    this.orders.forEach(it => {
+                        it.select = false;
+                    });
+                    el.select = true;
+                }
+            });
         }
     },
     components: {
@@ -30,7 +42,7 @@ export default {
 
 <style>
 .container {
-    width: 80rem;
+    width: 90vw;
     margin: 0 auto;
 }
 

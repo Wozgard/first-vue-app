@@ -2,12 +2,17 @@
     <main class="main">
         <div class="main__container container">
             <form class="main__form" action="">
-                <input class="main__text-input" type="mail">
-                <input class="main__text-input" type="phone">
-                <ul class="main__order-select order-select my-10">
-                    <orderItem v-for="item of orders" v-bind:item="item" v-on:order-select="checkingRadio" />
-                </ul>
-                <textarea cols="7" rows="5"></textarea>
+                <div class="main__form-body">
+                    <input placeholder="Ваше имя (как мне к вам обращаться)" class="main__text-input" type="text">
+                    <input placeholder="Ваша почта" class="main__text-input" type="mail">
+                    <input placeholder="Ваш номер телефона" class="main__text-input" type="phone">
+                    <ul class="main__order-select order-select">
+                        <orderItem v-for="item of orders" v-bind:item="item" v-on:order-select="checkingRadio" />
+                    </ul>
+                    <textarea placeholder="Ваш комментарий" cols="7" rows="5"></textarea>
+                    <button type="submit" class="main__button">Отправить</button>
+                </div>
+                <div class="main__form-image"><img src="@/assets/WnXHTYM-3VM.jpg" alt="#"></div>
             </form>
         </div>
     </main>
@@ -24,27 +29,54 @@ export default {
     },
     methods: {
         checkingRadio(id) {
-            const element = document.querySelector(`#${id}`);
-            element.hasAttribute('checked') ? element.removeAttribute('checked') : element.setAttribute('checked', '');
+            this.$emit('order-select', id)
         }
     }
 
 }
 </script>
 
-<style>
+<style scoped>
+.main {
+    flex: 1 1 auto;
+}
+
 .main__form {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    padding: 40px;
-    border-radius: 20px;
-    background-color: rgb(133, 169, 169, 0.4);
+    width: 100%;
+    padding: 3rem;
+    border-radius: 10px;
+    background-color: rgba(209, 209, 199, 0.866);
+}
+
+.main__form-body {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    width: 30rem;
+}
+
+.main__form-image {
+    flex: 0 1 auto;
+    margin: -3rem -3rem -3rem 3rem;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 47rem;
+    height: 100%;
+    overflow: hidden;
+}
+
+.main__form-image img {
+    margin-top: -3rem;
+    width: 61.35rem;
+    height: 41.65rem;
 }
 
 .main__text-input {
-    width: 20rem;
+    width: 100%;
     height: 3rem;
+    padding: 1.5rem;
     margin-bottom: 1rem;
     border-radius: 7px;
 }
@@ -54,35 +86,31 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    /*margin-bottom: 2rem;*/
-}
-
-.order-select__item {
-    display: flex;
-    align-items: center;
-}
-
-.order-select__item input {
-    margin-right: 10px;
-}
-
-.order-select__item label {
-    text-align: center;
-    margin-bottom: -5px;
-}
-
-.form-check-label {
-    cursor: pointer;
+    margin: 1rem 0 2rem;
 }
 
 textarea {
     border-radius: 10px;
-    max-width: 25rem;
-    max-height: 5rem;
-    min-height: 5rem;
+    padding: 1rem;
+    max-width: 100%;
+    max-height: 7rem;
+    min-height: 7rem;
+}
+
+button {
+    margin-top: 1.5rem;
+    width: 100%;
+    height: 3.5rem;
+    background-color: #eee;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out 0s;
+}
+
+button:hover {
+    background-color: #fff;
 }
 
 input {
-    transition: all 0.3 ease-in-out 0s;
+    transition: all 0.3s ease-in-out 0s;
 }
 </style>

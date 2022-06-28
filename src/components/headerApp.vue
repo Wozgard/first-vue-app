@@ -7,11 +7,11 @@
                 </div>
                 <nav class="header__nav nav">
                     <ul class="nav__list">
-                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Main</a></li>
-                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">About</a></li>
-                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Work examples</a></li>
-                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Prices</a></li>
-                        <li class="nav__item _current"><a v-on:click.prevent="goToPageBlock">Order</a></li>
+                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Главная</a></li>
+                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Обо мне</a></li>
+                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Примеры работ</a></li>
+                        <li class="nav__item"><a v-on:click.prevent="goToPageBlock">Цены</a></li>
+                        <li class="nav__item _current"><a v-on:click.prevent="goToPageBlock">Заказать</a></li>
                     </ul>
                 </nav>
             </div>
@@ -22,8 +22,8 @@
 <script>
 </script>
 
-<style>
-header {
+<style scoped>
+.header {
     position: relative;
     padding: 2rem;
     background-color: rgba(216, 216, 209, 0.866);
