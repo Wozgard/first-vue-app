@@ -1,10 +1,7 @@
 <template>
-    <li class="order-select__item form-check" v-on:click="$emit('order-select', item.id)">
-        <input id="item.id" name="paymentMethod" v-if="item.select" checked type="radio" class="form-check-input">
-        <input id="item.id" name="paymentMethod" v-else type="radio" class="form-check-input">
-        <label class="form-check-label">{{ item.serviceName }}</label>
+    <li class="order-select__item _radioInput" @click="checkingInput">
+        <input name="orderType" type="radio" class="" v-model="order.type">{{ item.serviceName }}
     </li>
-    <!-- data-select={{item.id}} -->
 </template>
 
 <script>
@@ -13,7 +10,35 @@ export default {
         item: {
             type: Object,
             required: true
+        },
+        order: Object
+    },
+    methods: {
+        checkingInput(e) {
+            /* const target = e.target
+            const input = target.parentElement.querySelector('input')
+            if (this.item.select && !input.hasAttribute('checked')) {
+                console.log(this.item.select)
+                input.setAttribute('checked', '');
+            }
+            if (!this.item.select && input.hasAttribute('checked')) {
+                console.log(this.item.select)
+                input.removeAttribute('checked');
+            } */
+            this.$emit('offer-select', this.item.id)
+        },
+        setForChecked(e) {
         }
+    },
+    mounted() {
+        const target = this.$el;
+        const input = target.querySelector('input');
+        if (this.item.select) {
+            input.setAttribute('checked', '');
+            input.parentElement.classList.add('_active');
+        }
+
+        input.setAttribute('id', this.item.id);
     }
 }
 </script>

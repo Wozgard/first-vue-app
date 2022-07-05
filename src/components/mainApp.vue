@@ -1,15 +1,16 @@
 <template>
     <main class="main">
         <div class="main__container container">
-            <form class="main__form" action="">
+            <form class="main__form" name="mainForm" action="" id="order" @submit.prevent="$emit('take-order')">
                 <div class="main__form-body">
-                    <input placeholder="Ваше имя (как мне к вам обращаться)" class="main__text-input" type="text">
-                    <input placeholder="Ваша почта" class="main__text-input" type="mail">
-                    <input placeholder="Ваш номер телефона" class="main__text-input" type="phone">
+                    <h5 class="main__uncorrect uncorrect-title">{{ uncorText }}</h5>
+                    <input @focus="formFocused" placeholder="Ваше имя (как мне к Вам обращаться)" class="main__text-input" type="text" name="userNmae" v-model="user.name">
+                    <input @focus="formFocused" placeholder="Ваша почта" class="main__text-input" type="mail" name="userMail" v-model="user.mail">
+                    <input @focus="formFocused" placeholder="Ваш номер телефона" class="main__text-input tel" type="phone" name="userPhone" v-model="user.phone">
                     <ul class="main__order-select order-select">
-                        <orderItem v-for="item of orders" v-bind:item="item" v-on:order-select="checkingRadio" />
+                        <orderItem v-for="item of offer" v-bind:item="item" @offer-select="checkingRadio" v-bind:order="order" />
                     </ul>
-                    <textarea placeholder="Ваш комментарий" cols="7" rows="5"></textarea>
+                    <textarea placeholder="Ваш комментарий (не обязательно)" cols="7" rows="5" name="orderComment" v-model="order.comment"></textarea>
                     <button type="submit" class="main__button">Отправить</button>
                 </div>
                 <div class="main__form-image"><img src="@/assets/WnXHTYM-3VM.jpg" alt="#"></div>
@@ -23,13 +24,29 @@
 import orderItem from '@/components/orderItem';
 
 export default {
-    props: ['orders'],
+    props: {
+        offer: Array,
+        order: Object,
+        user: Object,
+        uncorText: String
+    },
     components: {
         orderItem
     },
     methods: {
         checkingRadio(id) {
-            this.$emit('order-select', id)
+            this.$emit('offer-select', id)
+        },
+        findUncorrect() {
+            const uncor = document.querySelectorAll('._uncorrect');
+            if (uncor.length > 0) {
+                return true
+            } else {
+                return false
+            }
+        },
+        formFocused(e) {
+            this.$emit('main-form-focused', e.target)
         }
     }
 
@@ -68,9 +85,9 @@ export default {
 }
 
 .main__form-image img {
-    margin-top: -3rem;
-    width: 61.35rem;
-    height: 41.65rem;
+    margin-top: -1rem;
+    width: 63.35rem;
+    height: 44.15rem;
 }
 
 .main__text-input {
