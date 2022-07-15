@@ -8,10 +8,10 @@
                     <input @focus="formFocused" placeholder="Ваша почта" class="main__text-input" type="mail" name="userMail" v-model="user.mail">
                     <input @focus="formFocused" placeholder="Ваш номер телефона" class="main__text-input tel" type="phone" name="userPhone" v-model="user.phone">
                     <ul class="main__order-select order-select">
-                        <orderItem v-for="item of offer" v-bind:item="item" @offer-select="checkingRadio" v-bind:order="order" />
+                        <orderItem v-for="item of offer" v-bind:item="item" @offer-select="checkingRadio" @order-select-change="formFocused" v-bind:order="order" />
                     </ul>
-                    <textarea placeholder="Ваш комментарий (не обязательно)" cols="7" rows="5" name="orderComment" v-model="order.comment"></textarea>
-                    <button type="submit" class="main__button">Отправить</button>
+                    <textarea @focus="formFocused" placeholder="Ваш комментарий (не обязательно)" cols="7" rows="5" name="orderComment" v-model="order.comment"></textarea>
+                    <button type="submit" class="main__button">{{ butSendText }}</button>
                 </div>
                 <div class="main__form-image"><img src="@/assets/WnXHTYM-3VM.jpg" alt="#"></div>
             </form>
@@ -28,7 +28,8 @@ export default {
         offer: Array,
         order: Object,
         user: Object,
-        uncorText: String
+        uncorText: String,
+        butSendText: String
     },
     components: {
         orderItem
@@ -106,16 +107,11 @@ export default {
     margin: 1rem 0 2rem;
 }
 
-textarea {
-    border-radius: 10px;
-    padding: 1rem;
-    max-width: 100%;
-    max-height: 7rem;
-    min-height: 7rem;
-}
-
-button {
+.main__button {
     margin-top: 1.5rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: rgba(0, 0, 0, 0.8);
     width: 100%;
     height: 3.5rem;
     background-color: #eee;
@@ -123,8 +119,29 @@ button {
     transition: all 0.3s ease-in-out 0s;
 }
 
-button:hover {
+.main__button:hover {
     background-color: #fff;
+}
+
+.main__button._done {
+    cursor: default;
+    color: rgba(0, 0, 0, 0.6);
+    background-color: rgb(102, 196, 110);
+    transition: all 0.3s ease-in-out 0s;
+
+}
+
+.main__button._done:hover {
+    background-color: rgb(102, 196, 110);
+
+}
+
+textarea {
+    border-radius: 10px;
+    padding: 1rem;
+    max-width: 100%;
+    max-height: 7rem;
+    min-height: 7rem;
 }
 
 input {

@@ -15,17 +15,8 @@ export default {
     },
     methods: {
         checkingInput(e) {
-            /* const target = e.target
-            const input = target.parentElement.querySelector('input')
-            if (this.item.select && !input.hasAttribute('checked')) {
-                console.log(this.item.select)
-                input.setAttribute('checked', '');
-            }
-            if (!this.item.select && input.hasAttribute('checked')) {
-                console.log(this.item.select)
-                input.removeAttribute('checked');
-            } */
             this.$emit('offer-select', this.item.id)
+            this.$emit('order-select-change', e)
         },
         setForChecked(e) {
         }

@@ -1,6 +1,6 @@
 <template >
     <headerApp />
-    <mainApp v-bind:offer="offer" v-bind:uncorText="uncorText" v-bind:user="user" v-bind:order="order" @offer-select="checkingRadio" @take-order="createUserAndOrder" @main-form-focused="ucorectRemoveFocused" />
+    <mainApp v-bind:offer="offer" v-bind:butSendText="butSendText" v-bind:uncorText="uncorText" v-bind:user="user" v-bind:order="order" @offer-select="checkingRadio" @take-order="createUserAndOrder" @main-form-focused="ucorectRemoveAndButStatusChange" />
     <footerApp />
 </template>
 
@@ -17,7 +17,7 @@ export default {
             offer: [
                 { id: "photo", serviceName: "Обработка фото", select: true },
                 { id: "video", serviceName: "Монтаж короткого ролика (до 5 минут)", select: false },
-                { id: "photoSet", serviceName: "Фотосессия", select: false }
+                { id: "photoSet", serviceName: "Фотосессия (если вы живете в г. Белгород)", select: false }
             ],
             user: {
                 name: '',
@@ -28,7 +28,11 @@ export default {
                 type: '',
                 comment: ''
             },
-            uncorText: 'Не корректно введено поле'
+            defaultHeders: {
+                'Content-Type': 'application/json'
+            },
+            uncorText: 'Не корректно введено поле',
+            butSendText: 'Заказать'
         }
     },
     methods: {
@@ -40,13 +44,13 @@ export default {
                     element.removeAttribute('checked');
                     element.parentElement.classList.remove('_active');
                 }
-                if (offer[i].id == id && !element.hasAttribute('checked')) {
+                if (offer[i].id === id && !element.hasAttribute('checked')) {
                     element.setAttribute('checked', '');
                     element.parentElement.classList.add('_active');
                 }
             }
             offer.forEach(el => {
-                if (el.id == id && !el.select) {
+                if (el.id === id && !el.select) {
                     offer.forEach(it => {
                         it.select = false;
                     });
@@ -61,9 +65,9 @@ export default {
 
             /* Delete probels */
             for (let i in user) {
-                user[i] = user[i].trim()
+                user[i] = user[i].trim();
             }
-            order.comment = order.comment.trim()
+            order.comment = order.comment.trim();
 
             /* Add type to order */
             for (let i in offer) {
@@ -72,13 +76,19 @@ export default {
             console.log(user)
             console.log(order)
             /* Checking filds */
-            this.checkCorrectFilds()
+            if (this.checkCorrectFilds()) {
+                this.butSendText = 'Заказ отправлен';
+                document.querySelector('.main__button').setAttribute('disabled', '');
+                document.querySelector('.main__button').classList.add('_done');
+
+                this.sendData(user, '/api/customer/create', 'POST');
+                this.sendData(order, '/api/booking/create', 'POST');
+            }
+
         },
         checkCorrectFilds() {
-            const order = this.order;
             const user = this.user;
 
-            const formBody = document.querySelector('.main__form-body');
             const uncorTitle = document.querySelector('.uncorrect-title');
 
             let countUncor = 0;
@@ -101,26 +111,79 @@ export default {
                 uncorTitle.style.display = 'block';
                 document.querySelector('[name = "userPhone"]').classList.add('_uncorrect');
             }
-            console.log(countUncor)
+
+            /* Return */
+            if (countUncor === 0) {
+                return true
+            }
+            else {
+                return false
+            }
         },
-        ucorectRemoveFocused(element) {
+        ucorectRemoveAndButStatusChange(element) {
             const form = document.forms.mainForm;
             const uncorTitle = document.querySelector('.uncorrect-title');
 
             if (element.classList.contains('_uncorrect')) {
                 element.classList.remove('_uncorrect')
             }
-            if (form.querySelectorAll('._uncorrect').length == 0) {
+            if (form.querySelectorAll('._uncorrect').length === 0) {
                 uncorTitle.style.display = 'none';
             }
+
+            if (element.classList.contains('_radioInput')) {
+                this.butSendText = 'Заказать';
+                document.querySelector('.main__button').removeAttribute('disabled');
+                document.querySelector('.main__button').classList.remove('_done');
+            }
+            element.addEventListener('keydown', () => {
+                this.butSendText = 'Заказать';
+                document.querySelector('.main__button').removeAttribute('disabled');
+                document.querySelector('.main__button').classList.remove('_done');
+            });
         },
         validateEmail(email) {
             const pattern = /^[\w]{1}[\w-\.]*@[\w-]+\.[a-z]{2,4}$/i;
             return pattern.test(email);
+        },
+        async sendData(data = null, url, method = 'GET', headers = this.defaultHeders) {
+            try {
+                let body;
+                if (data) {
+                    body = JSON.stringify(data);
+                }
+                const response = await fetch(url, {
+                    method,
+                    headers,
+                    body
+                });
+                if (this.messageAnswerServer(response)) {
+                    return response.json();
+                } else {
+                    return null;
+                }
+            }
+            catch (e) {
+                alert('Извините, похоже произошла ошибка! ', e.message);
+            }
+        },
+        messageAnswerServer(res) {
+            if (res.status == 400) {
+                alert('Пожалуйста заполните все поля формы');
+                return false;
+            }
+            if (res.status == 503) {
+                alert('Извините, произошла какая-то ошибка на сервере. Попробуйте еще раз');
+                return false;
+            }
+            if (res.status >= 200) {
+                return true;
+            }
+
         }
     },
     mounted() {
-        phoneMask.methods.macskedPhone()
+        phoneMask.methods.macskedPhone();
     },
     components: {
         headerApp,
